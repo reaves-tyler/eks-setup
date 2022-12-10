@@ -1,0 +1,44 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: {{ .Chart.Name }}
+  labels:
+    app.kubernetes.io/instance: {{ .Chart.Name }}
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: {{ .Chart.Name }}
+    app.kubernetes.io/version: {{ .Chart.Version }}
+    helm.sh/chart: {{ .Chart.Name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: {{ .Chart.Name }}
+      app.kubernetes.io/name: {{ .Chart.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: {{ .Chart.Name }}
+        app.kubernetes.io/name: {{ .Chart.Name }}
+      annotations:
+        description: Application
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.imageName }}:{{ .Values.imageTag }}"
+          ports:
+            - name: {{ .Values.service.portName }}
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          envFrom:
+            - configMapRef:
+                name: {{ .Values.configmap }}
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+              scheme: HTTP
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+              scheme: HTTP

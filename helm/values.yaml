@@ -1,0 +1,16 @@
+imageName: tylersi/docker-nest
+imageTag: latest
+
+configmap: production
+config:
+  DATA_ENDPOINT: example.com
+
+service:
+  portName: http
+  port: 80
+  type: ClusterIP #???
+
+ingress:
+  issuer: letsencrypt-prod
+  issuerSecret: tls-secret
+  issuerEmail: example@example.com

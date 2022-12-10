@@ -1,0 +1,32 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: {{ .Values.ingress.issuer }}
+spec:
+  acme:
+    # The ACME server URL
+    server: https://acme-v02.api.letsencrypt.org/directory
+    # Email address used for ACME registration
+    email: {{ .Values.ingress.issuerEmail }}
+    # Name of a secret used to store the ACME account private key
+    privateKeySecretRef:
+      name: {{ .Values.ingress.issuer }}
+    # Enable the HTTP-01 challenge provider
+    solvers:
+      - http01:
+          ingress:
+            class: nginx
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ .Values.ingress.issuer }}
+spec:
+  secretName: {{ .Values.ingress.issuerSecret }}
+  issuerRef:
+    kind: Issuer
+    name: {{ .Values.ingress.issuer }}
+  commonName: {{ .Values.config.DATA_ENDPOINT }}
+  dnsNames:
+    - {{ .Values.config.DATA_ENDPOINT }}

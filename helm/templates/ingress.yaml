@@ -1,0 +1,31 @@
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: {{ .Chart.Name }}
+  labels:
+    app.kubernetes.io/instance: {{ .Chart.Name }}
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: {{ .Chart.Name }}
+    app.kubernetes.io/version: {{ .Chart.Version }}
+    helm.sh/chart: {{ .Chart.Name }}
+  annotations:
+    cert-manager.io/cluster-issuer: {{ .Values.ingress.issuer }}
+    certmanager.k8s.io/cluster-issuer: {{ .Values.ingress.issuer }}
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/proxy-body-size: 20m #??
+spec:
+  rules:
+    - host: {{ .Values.config.DATA_ENDPOINT }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Chart.Name }}
+                port:
+                  number: {{ .Values.service.port }}
+  tls:
+    - hosts:
+        - {{ .Values.config.DATA_ENDPOINT }}
+      secretName: {{ .Values.ingress.issuerSecret }}

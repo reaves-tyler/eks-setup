@@ -1,0 +1,12 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ .Values.configmap }}
+  labels:
+    app.kubernetes.io/instance: {{ .Chart.Name }}
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: {{ .Chart.Name }}
+    app.kubernetes.io/version: {{ .Chart.Version }}
+    helm.sh/chart: {{ .Chart.Name }}
+data:
+  DATA_ENDPOINT: {{ .Values.config.DATA_ENDPOINT | quote }}
