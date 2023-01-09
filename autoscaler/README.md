@@ -20,7 +20,7 @@ eksctl create iamserviceaccount \
 `kubectl apply -f cluster-autoscaler-autodiscover.yaml`
 
 ```
-atch deployment cluster-autoscaler \
+kubectl patch deployment cluster-autoscaler \
  -n kube-system \
  -p '{"spec":{"template":{"metadata":{"annotations":{"cluster-autoscaler.kubernetes.io/safe-to-evict": "false"}}}}}'
 ```
